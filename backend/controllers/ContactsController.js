@@ -9,7 +9,10 @@ export const searchContacts = async (request, response, next) => {
       return response.status(400).send("SearchTerm is required.");
     }
 
-    const sanitizedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const sanitizedSearchTerm = searchTerm.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&"
+    );
     const regex = new RegExp(sanitizedSearchTerm, "i");
 
     const contacts = await User.find({
@@ -78,6 +81,27 @@ export const getContactsForDMList = async (request, response, next) => {
         $sort: { lastMessageTime: -1 }, // Ensure sorting by latest message
       },
     ]);
+
+    return response.status(200).json({ contacts });
+  } catch (error) {
+    console.error(error);
+    return response.status(500).send("Internal Server Error");
+  }
+};
+
+export const getAllContacts = async (request, response, next) => {
+  try {
+    const users = await User.find(
+      { _id: { $ne: request.userId } },
+      "firstName lastName _id email"
+    );
+    const contacts = users.map((user) => {
+      {
+        label: user.firstName
+          ? `${user.firstName} ${user.lastName}`
+          : user.email;
+      }
+    });
 
     return response.status(200).json({ contacts });
   } catch (error) {
