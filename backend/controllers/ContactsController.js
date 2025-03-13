@@ -91,21 +91,34 @@ export const getContactsForDMList = async (request, response, next) => {
 
 export const getAllContacts = async (request, response, next) => {
   try {
+    console.log("🔹 Request User ID:", request.userId); // Debugging
+
+    if (!request.userId) {
+      return response.status(400).json({ message: "User ID missing in request" });
+    }
+
     const users = await User.find(
-      { _id: { $ne: request.userId } },
+      { _id: { $ne: request.userId } }, // Exclude current user
       "firstName lastName _id email"
     );
-    const contacts = users.map((user) => {
-      {
-        label: user.firstName
-          ? `${user.firstName} ${user.lastName}`
-          : user.email;
-      }
-    });
+
+    console.log("🔹 Fetched Users:", users); // Debugging
+
+    if (!users.length) {
+      return response.status(404).json({ message: "No contacts found" });
+    }
+
+    const contacts = users.map((user) => ({
+      label: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email,
+      value: user._id.toString(), // Ensure _id is a string
+    }));
+
+    console.log("🔹 Contacts Response:", contacts); // Debugging
 
     return response.status(200).json({ contacts });
   } catch (error) {
-    console.error(error);
-    return response.status(500).send("Internal Server Error");
+    console.error("❌ Error fetching contacts:", error);
+    return response.status(500).json({ message: "Internal Server Error" });
   }
 };
+
