@@ -44,8 +44,7 @@ const CreateChannel = () => {
   }, []);
 
   const createChannel = async () => {
-    console.log("Creating channel with:", selectedContacts, channelName);
-    // Your channel creation logic
+    
   };
 
   return (

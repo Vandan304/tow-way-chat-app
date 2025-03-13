@@ -102,7 +102,7 @@ export const getAllContacts = async (request, response, next) => {
       "firstName lastName _id email"
     );
 
-    console.log("🔹 Fetched Users:", users); // Debugging
+    // console.log("🔹 Fetched Users:", users); // Debugging
 
     if (!users.length) {
       return response.status(404).json({ message: "No contacts found" });
@@ -113,7 +113,7 @@ export const getAllContacts = async (request, response, next) => {
       value: user._id.toString(), // Ensure _id is a string
     }));
 
-    console.log("🔹 Contacts Response:", contacts); // Debugging
+    // console.log("🔹 Contacts Response:", contacts); // Debugging
 
     return response.status(200).json({ contacts });
   } catch (error) {

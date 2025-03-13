@@ -1,3 +1,5 @@
+import channel from "../../../../backend/models/ChannelModel";
+
 export const createChatSlice = (set, get) => ({
   selectedChatType: undefined,
   selectedChatData: undefined,
@@ -7,16 +9,23 @@ export const createChatSlice = (set, get) => ({
   isDownloading: false,
   fileUploadProgress: 0,
   fileDownloadProgress: 0,
+  channels: [],
+  setChannels: (channels) => set({ channels }),
   setIsUploading: (isUpoading) => set({ isUpoading }),
   setIsDownloading: (isDownloading) => set({ isDownloading }),
-  setFileUploadProgress:(fileUploadProgress) =>set({fileUploadProgress}),
-  setFileDownloadProgress:(fileDownloadProgress) =>set({fileDownloadProgress}),
+  setFileUploadProgress: (fileUploadProgress) => set({ fileUploadProgress }),
+  setFileDownloadProgress: (fileDownloadProgress) =>
+    set({ fileDownloadProgress }),
   setSelectedChatType: (selectedChatType) => set({ selectedChatType }),
   setSelectedChatData: (selectedChatData) => set({ selectedChatData }),
   setSelectedChatMessages: (selectedChatMessages) =>
     set({ selectedChatMessages }),
   setDirectMessagesContacts: (directMessagesContacts) =>
     set({ directMessagesContacts }),
+  addChannel: (channel) => {
+    const channels = get.channels;
+    set({ channels: [channel, ...channels] });
+  },
   closeChat: () =>
     set({
       selectedChatData: undefined,
