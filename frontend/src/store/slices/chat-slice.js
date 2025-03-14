@@ -10,31 +10,37 @@ export const createChatSlice = (set, get) => ({
   fileUploadProgress: 0,
   fileDownloadProgress: 0,
   channels: [],
+
   setChannels: (channels) => set({ channels }),
-  setIsUploading: (isUpoading) => set({ isUpoading }),
+  setIsUploading: (isUploading) => set({ isUploading }),
   setIsDownloading: (isDownloading) => set({ isDownloading }),
   setFileUploadProgress: (fileUploadProgress) => set({ fileUploadProgress }),
   setFileDownloadProgress: (fileDownloadProgress) =>
     set({ fileDownloadProgress }),
+
   setSelectedChatType: (selectedChatType) => set({ selectedChatType }),
   setSelectedChatData: (selectedChatData) => set({ selectedChatData }),
   setSelectedChatMessages: (selectedChatMessages) =>
     set({ selectedChatMessages }),
   setDirectMessagesContacts: (directMessagesContacts) =>
     set({ directMessagesContacts }),
+
   addChannel: (channel) => {
-    const channels = get.channels;
+    const channels = get().channels || []; // Ensure it's always an array
     set({ channels: [channel, ...channels] });
   },
+
   closeChat: () =>
     set({
       selectedChatData: undefined,
       selectedChatType: undefined,
       selectedChatMessages: [],
     }),
+
   addMessage: (message) => {
-    const selectedChatMessages = get().selectedChatMessages;
+    const selectedChatMessages = get().selectedChatMessages || [];
     const selectedChatType = get().selectedChatType;
+
     set({
       selectedChatMessages: [
         ...selectedChatMessages,
@@ -43,11 +49,11 @@ export const createChatSlice = (set, get) => ({
           recipient:
             selectedChatType === "channel"
               ? message.recipient
-              : message.recipient._id,
+              : message.recipient?._id, // Ensure _id exists
           sender:
             selectedChatType === "channel"
               ? message.sender
-              : message.sender._id,
+              : message.sender?._id, // Ensure _id exists
         },
       ],
     });
